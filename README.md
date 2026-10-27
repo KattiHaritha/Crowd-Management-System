@@ -1,53 +1,112 @@
-# Crowd Management System — Frontend Assessment
+# Crowd Management System
 
-Responsive React + TypeScript single-page dashboard for the Kloudspot Crowd Management System assessment.
+A responsive React and TypeScript dashboard built for the Kloudspot Crowd Management System frontend assessment. It provides authenticated access to live venue analytics, visitor records, and real-time crowd alerts.
 
 ## Features
-- Login page with password visibility toggle and API error display
-- Sidebar navigation and responsive header
-- Live overview metrics with occupancy and demographic charts
-- Crowd entries table with gender, dwell time, search, and API pagination
-- Authenticated Axios API integration and Socket.IO live alerts
 
-## Requirements
-- Node.js 20 LTS (recommended) or a compatible current LTS
+- Secure login with inline error handling and password visibility toggle
+- Protected dashboard and crowd-entry routes using a session token
+- Dashboard cards for live occupancy, today's footfall, and average dwell time
+- Occupancy and demographic visualizations powered by backend analytics APIs
+- Paginated visitor entry and exit records with dwell time details
+- Visitor search within the currently loaded entries page
+- Socket.IO connection for real-time alert and occupancy updates
+- Responsive sidebar and layouts for desktop and mobile viewports
+- Loading, empty, and API-error states throughout the application
+
+## Tech Stack
+
+- React 18
+- TypeScript
+- Vite
+- React Router
+- Axios
+- Recharts
+- Socket.IO Client
+- Lucide React
+
+## Prerequisites
+
+- Node.js 20 LTS or a compatible current LTS version
 - npm
 
-## Run locally
-```bash
-npm install
-cp .env.example .env
-npm run dev
-```
-On Windows PowerShell, copy the environment file with:
-```powershell
-Copy-Item .env.example .env
-```
-Open the localhost URL shown by Vite.
+## Local Setup
 
-## API integration
-The assessment brief names these endpoints:
+1. Clone the repository and open the project directory.
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create the local environment file:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   On Windows PowerShell:
+
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open the local URL printed by Vite in your browser.
+
+## Environment Variables
+
+Create a `.env` file from `.env.example`:
+
+```env
+VITE_API_BASE_URL=https://hiring-dev.internal.kloudspot.com/api
+VITE_SOCKET_URL=https://hiring-dev.internal.kloudspot.com
+```
+
+Do not commit `.env`, since it may contain environment-specific values.
+
+## Available Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the Vite development server. |
+| `npm run build` | Type-checks the project and creates a production build. |
+| `npm run preview` | Serves the production build locally. |
+
+## API Integration
+
+The application follows the supplied Swagger specification and integrates with:
+
 - `POST /auth/login`
+- `GET /sites`
 - `POST /analytics/dwell`
 - `POST /analytics/footfall`
 - `POST /analytics/occupancy`
 - `POST /analytics/demographics`
 - `POST /analytics/entry-exit`
+- `GET /sim/start` and `GET /sim/stop`
 
-Base API URL and Socket.IO URL are configured in `.env`. The login, site, analytics, entry/exit pagination, and live `alert` event integrations have been verified against the provided Swagger service. Dashboard values are loaded from the backend; no demo metrics are used.
+All authenticated requests include the JWT token received from login. Dashboard values are loaded from APIs; no mock analytics data is used.
 
-## Build
+## Verification
+
+- `npm run build` completes successfully.
+- Live login, sites, dwell, footfall, paginated entry/exit, and Socket.IO connection were verified using the supplied test account.
+- The dashboard remains usable if an individual analytics request fails, showing available metrics together with an error message.
+
+## Known Backend Limitation
+
+At the time of verification, the live service returned `404` for the Swagger-documented `POST /analytics/occupancy` and `POST /analytics/demographics` endpoints. The frontend uses the documented paths and handles these unavailable chart APIs gracefully. Once the backend routes are available, the occupancy and demographics charts will load automatically.
+
+## Build for Production
+
 ```bash
 npm run build
 npm run preview
 ```
-
-## Before submission
-- [x] Verify login request body and token response in Swagger
-- [x] Implement token/session persistence and protected routes
-- [x] Connect dashboard analytics endpoints and entries pagination
-- [x] Verify Socket.IO connection and live alert payloads
-- [x] Handle loading, error, and empty states
-- [ ] Test responsive layouts manually
-- [ ] Deploy frontend and add live URL here
-- [ ] Push source code to GitHub/GitLab
